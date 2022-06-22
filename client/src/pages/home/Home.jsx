@@ -1,14 +1,27 @@
+import { useEffect, useState } from "react";
 import Header from "../../components/header/Header";
 import Posts from "../../components/posts/Posts";
 import Sidebar from "../../components/sidebar/Sidebar";
 import "./Home.css";
+import axios from "axios";
 
 const Home = () => {
+  const [posts, setPosts] = useState([]);
+
+  const fetchPost = async () => {
+    const response = await axios.get("/posts");
+    setPosts(response.data);
+  };
+
+  useEffect(() => {
+    fetchPost();
+  }, []);
+
   return (
     <>
       <Header />
       <div className="home">
-        <Posts />
+        <Posts posts={posts} />
         <Sidebar />
       </div>
     </>
