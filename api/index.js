@@ -42,6 +42,6 @@ app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/categories", categoriesRoute);
 
-app.listen("5000", () => {
+app.listen("1234", () => {
   console.log("Server is running");
 });

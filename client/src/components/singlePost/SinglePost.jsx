@@ -5,7 +5,7 @@ import { Context } from "../../context/Context";
 import "./SinglePost.css";
 
 const SinglePost = () => {
-  const PF = "http://localhost:5000/images/";
+  const PF = "http://localhost:1234/images/";
   const { user } = useContext(Context);
   const [singlePost, setSinglePost] = useState({});
   const location = useLocation();
