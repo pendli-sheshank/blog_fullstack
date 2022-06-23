@@ -1,24 +1,61 @@
+import { useContext, useState } from "react";
 import "./Write.css";
+import axios from "axios";
+import { Context } from "../../context/Context";
 
 const Write = () => {
+  const [title, setTitle] = useState("");
+  const [desc, setDesc] = useState("");
+  const [file, setFile] = useState(null);
+
+  const { user } = useContext(Context);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const newPost = {
+      username: user.username,
+      title,
+      desc,
+    };
+    if (file) {
+      const data = new FormData();
+      const filename = Date.now() + file.name;
+      data.append("name", filename);
+      data.append("file", file);
+      newPost.photo = filename;
+      try {
+        await axios.post("/upload", data);
+      } catch (error) {}
+    }
+    try {
+      const res = await axios.post("/posts", newPost);
+      window.location.replace("/post/" + res.data._id);
+    } catch (error) {}
+  };
+
   return (
     <div className="write">
-      <img
-        src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80"
-        alt=""
-        className="writeImg"
-      />
-      <form className="writeForm">
+      {file && (
+        <img alt="" className="writeImg" src={URL.createObjectURL(file)} />
+      )}
+      <form onSubmit={handleSubmit} className="writeForm">
         <div className="writeFormGroup">
           <label htmlFor="fileInput">
             <i className="writeIcon fas fa-plus"></i>
           </label>
-          <input style={{ display: "none" }} type="file" id="fileInput" />
+          <input
+            style={{ display: "none" }}
+            type="file"
+            id="fileInput"
+            onChange={(e) => setFile(e.target.files[0])}
+          />
           <input
             className="writeInput writeText"
             type="text"
             placeholder="Title"
             autoFocus={true}
+            onChange={(e) => setTitle(e.target.value)}
           />
         </div>
         <div className="writeFormGroup">
@@ -26,9 +63,12 @@ const Write = () => {
             className="writeInput writeText"
             placeholder="Tell your story.."
             type="text"
+            onChange={(e) => setDesc(e.target.value)}
           ></textarea>
         </div>
-        <button className="writeSubmit">Publish</button>
+        <button type="submit" className="writeSubmit">
+          Publish
+        </button>
       </form>
     </div>
   );

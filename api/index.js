@@ -9,9 +9,11 @@ const categoriesRoute = require("./routes/categories");
 const multer = require("multer");
 
 const dotenv = require("dotenv");
+const path = require("path");
 const mongoose = require("mongoose");
 dotenv.config();
 app.use(express.json());
+app.use("/images", express.static(path.join(__dirname, "/images")));
 
 mongoose
   .connect(process.env.MONGOOSE_URL, {
